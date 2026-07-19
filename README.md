@@ -4,7 +4,7 @@
 
 ---
 
-## 🏗️ 1. Project Architecture & Directory (폴더 구조 및 용도)
+## 🏗️ Project Architecture & Directory (폴더 구조 및 용도)
 
 ```text
 src/
