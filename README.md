@@ -22,10 +22,10 @@ src/
 ├── layouts/              # 레이아웃 컴포넌트
 │   └── MainLayout.jsx    # 전체 페이지 기본 골격 정의
 ├── pages/                # 각 라우트별 독립적인 페이지 화면
-│   ├── HomePage.jsx      # 기본 State 활용 복습 페이지
+│   ├── HomePage.jsx      # 프로젝트 소개 및 메인 홈 화면 (기존 실습 로직 이전)
 │   ├── ChatPage.jsx      # AI 채팅 페이지 (Axios / Fetch)
 │   ├── DocumentPage.jsx  # 문서 목록 조회 페이지 (Axios / Fetch)
-│   └── PracticePage.jsx  # 컴포넌트 간 데이터 전달 실습 페이지
+│   └── PracticePage.jsx  # 실습 페이지 🔄 - 기초 State 활용 복습 및 컴포넌트 간 데이터 전달(Callback)
 ├── App.jsx               # 라우팅 경로 설정 및 루트 컴포넌트
 └── main.jsx              # 애플리케이션 진입점 (Context 주입)
 ```
@@ -51,16 +51,20 @@ src/
 
 ### 📝 기능 설명 및 용도
 
-- **전역 라우터 환경 주입 (`main.jsx`)**
+**전역 라우터 환경 주입 (`main.jsx`)**
+
 - `<BrowserRouter>`로 최상위 컴포넌트를 감싸 프로젝트 전체에서 페이지 이동(라우팅) 기능을 사용할 수 있도록 기본 환경을 조성합니다.
 
-- **라우팅 경로 정의 (`src/App.jsx`)**
+**라우팅 경로 정의 (`src/App.jsx`)**
+
 - `<Routes>`와 `<Route>` 태그를 사용해 실제 브라우저 주소(URL)와 컴포넌트(`HomePage`, `ChatPage` 등)를 1:1로 매핑하고 총괄합니다.
 
-- **공통 레이아웃 아키텍처 (`src/layouts/MainLayout.jsx`)**
+**공통 레이아웃 아키텍처 (`src/layouts/MainLayout.jsx`)**
+
 - 모든 페이지에서 공통으로 보여줄 전체적인 뼈대 구조를 정의합니다. 부모 라우트 속성으로 쓰이며, 주소가 바뀔 때마다 교체되어 들어올 자식 컴포넌트들의 위치를 `<Outlet/>`으로 지정해 줍니다.
 
-- **네비게이션 링크 구현 (`src/components/Sidebar.jsx`)**
+**네비게이션 링크 구현 (`src/components/Sidebar.jsx`)**
+
 - `<nav>`와 `<NavLink>`를 사용하여 유저가 클릭해 페이지를 이동할 수 있는 메뉴판을 만듭니다. 실제 라우팅 정의는 `App.jsx`에서 하고, 여기서는 이동할 주소(`to="/chat"`)만 연결합니다.
 
 ---
@@ -71,16 +75,18 @@ src/
 
 ### 📁 연관 파일
 
-- `src/pages/HomePage.jsx`
+- `src/pages/PracticePage.jsx`
 
 - `src/components/Button.jsx`
 
 ### 📝 기능 설명 및 용도
 
-- **컴포넌트 독립 상태 관리 (`src/pages/HomePage.jsx`)**
+**컴포넌트 독립 상태 관리 (`src/pages/PracticePage.jsx`)**
+
 - `useState`를 활용해 화면에서 동적으로 변하는 데이터(`count`)를 선언하고 제어합니다. 내부 함수를 통해 상태가 업데이트되면 리액트가 화면을 자동으로 다시 그려줍니다(리렌더링).
 
-- **UI 컴포넌트 재사용 및 데이터 수신 (`src/components/Button.jsx`)**
+**UI 컴포넌트 재사용 및 데이터 수신 (`src/components/Button.jsx`)**
+
 - 부모 컴포넌트가 넘겨준 문자열(`text`)과 이벤트 함수(`onClick`)를 **Props**로 받아와 화면에 띄우고 실행하는 순수 UI 컴포넌트입니다.
 
 ---
@@ -97,13 +103,18 @@ src/
 
 ### 📝 기능 설명 및 용도
 
-- **상태 컨트롤 타워 (`src/pages/PracticePage.jsx`)**
+**리액트 핵심 종합 연습 타워 (`src/pages/PracticePage.jsx`) 🔄**
+
+- 단순 단방향 상태 제어(count)부터 시작하여 하위 컴포넌트들이 공유할 복잡한 메인 데이터(대화 기록 배열)까지 한곳에서 총괄하여 연습하는 종합 실습 전용 페이지입니다.
+  **상태 컨트롤 타워 (`src/pages/PracticePage.jsx`)**
 - 하위 컴포넌트들이 공유할 메인 데이터(예: 대화 기록 배열)를 소유하고 총괄하는 부모 페이지입니다.
 
-- **하향식 데이터 출력 (`src/components/ChatHistory.jsx`)**
+**하향식 데이터 출력 (`src/components/ChatHistory.jsx`)**
+
 - 부모 컴포넌트로부터 데이터 배열을 Props로 단순 전달받아, `map()` 함수를 돌려 화면에 리스트 형태로 뿌려주는 출력 전용 자식 컴포넌트입니다.
 
-- **상향식 콜백 함수 실행 (`src/components/ChatInput.jsx`)**
+**상향식 콜백 함수 실행 (`src/components/ChatInput.jsx`)**
+
 - 유저가 입력창에 타이핑한 값을 자체 상태로 가지고 있다가, 전송 버튼을 누르는 순간 부모가 Props로 내려준 콜백 함수(`onSend`)를 호출하여 데이터를 부모에게 역으로 던져주는(상태 끌어올리기) 입력 전용 자식 컴포넌트입니다.
 
 ---
@@ -123,16 +134,20 @@ src/
 
 ### 📝 기능 설명 및 용도
 
-- **공통 네트워크 설정 (`src/api/axiosInstance.js`)**
+**공통 네트워크 설정 (`src/api/axiosInstance.js`)**
+
 - 서버의 기본 주소(`baseURL`), 타임아웃 제한 시간, 공통 헤더 설정 등을 한곳에 모아 인스턴스로 정의합니다. 반복되는 통신 설정 코드를 제거해 줍니다.
 
-- **도메인별 API 함수 모듈화 (`src/api/chatApi.js`, `src/api/documentApi.js`)**
+**도메인별 API 함수 모듈화 (`src/api/chatApi.js`, `src/api/documentApi.js`)**
+
 - 생성된 `axiosInstance`를 사용해 각각 채팅 전송(`POST`), 문서 목록 요청(`GET`) 등 실제 서버 통신을 담당할 비동기 함수들을 컴포넌트 외부로 분리해 정의합니다.
 
-- **라이프사이클 기반 초기 데이터 조회 (`src/pages/DocumentPage.jsx` + `useEffect`)**
+**라이프사이클 기반 초기 데이터 조회 (`src/pages/DocumentPage.jsx` + `useEffect`)**
+
 - 컴포넌트가 처음 화면에 켜지는 시점(**Mount**)에 딱 한 번만 `documentApi` 함수를 호출하도록 `useEffect`의 의존성 배열을 빈 배열(`[]`)로 설정하여 데이터를 안전하게 가져옵니다.
 
-- **사용자 비즈니스 로직 처리 (`src/pages/ChatPage.jsx`)**
+**사용자 비즈니스 로직 처리 (`src/pages/ChatPage.jsx`)**
+
 - 유저가 메시지를 보냈을 때 `chatApi` 함수를 호출하여 비동기 응답을 받아오고, 통신 상태에 따라 로딩 스피너 작동이나 에러 예외 처리를 화면에 반영합니다.
 
 ---
@@ -149,10 +164,12 @@ src/
 
 ### 📝 기능 설명 및 용도
 
-- **순수 HTTP GET 요청 처리 (`DocumentPage_nonAxios.jsx`)**
+**순수 HTTP GET 요청 처리 (`DocumentPage_nonAxios.jsx`)**
+
 - `useEffect` 안에서 별도 옵션 없이 `fetch(url)`를 호출하여 서버의 데이터를 가져옵니다. 날것의 데이터가 오기 때문에 반드시 **`await response.json()`** 단계를 거쳐 자바스크립트 객체로 수동 변환한 뒤 상태에 저장합니다.
 
-- **순수 HTTP POST 요청 처리 (`ChatPage_nonAxios.jsx`)**
+**순수 HTTP POST 요청 처리 (`ChatPage_nonAxios.jsx`)**
+
 - 서버에 데이터를 보낼 때 `fetch(url, { method: 'POST', headers: { ... }, body: JSON.stringify(...) })`와 같이 HTTP 메서드, 헤더 정보, 직렬화된 문자열 본문을 컴포넌트 내부에 직접 명시하여 통신을 수행합니다.
 
 ---
@@ -168,11 +185,13 @@ API 서버 주소나 보안이 필요한 키(Key) 등 변경 가능성이 있거
 
 ### 📝 기능 설명 및 용도
 
-- **환경변수 정의 및 은닉 (`.env`)**
+**환경변수 정의 및 은닉 (`.env`)**
+
 - 프로젝트 최상단(Root)에 위치하며, `VITE_API_URL=http://localhost:5173`과 같이 전역 설정을 키-값(Key-Value) 형태로 저장합니다.
 - Vite 빌드 도구를 사용하는 경우, 변수명 앞에 반드시 **`VITE_`** 접두사를 붙여야 리액트 앱 내부에서 안전하게 인식할 수 있습니다.
 
-- **환경변수 참조 및 동적 적용 (`src/api/axiosInstance.js`)**
+**환경변수 참조 및 동적 적용 (`src/api/axiosInstance.js`)**
+
 - 코드 내부에서 `import.meta.env.VITE_API_URL` 문법을 사용해 `.env`에 등록된 서버 주소를 동적으로 불러옵니다.
 - 기존에 하드코딩되어 있던 `baseURL` 자리를 이 환경변수로 대체함으로써, 개발 환경과 운영 환경의 서버 주소가 달라지더라도 코드를 일일이 수정할 필요 없이 유연하게 대응할 수 있도록 만듭니다.
 
